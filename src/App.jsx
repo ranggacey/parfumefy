@@ -161,25 +161,21 @@ function useScrollMorph() {
 
 function ProductCard({ p }) {
   return (
-    <article className="card rv" data-card={p.id}>
+    <article className="card" data-card={p.id}>
       <div className="card-img">
         <img src={p.image} alt={`${p.brand} ${p.name}`} loading="lazy" />
         {p.badge && <span className="card-badge">{p.badge}</span>}
       </div>
       <div className="card-body">
-        <div className="card-brand">{p.brand} · {p.size}</div>
+        <div className="card-brand">{p.brand}, {p.size}</div>
         <h3 className="card-name">{p.name}</h3>
-        <div className="card-notes">
-          {p.notes.map((n) => (
-            <span key={n}>{n}</span>
-          ))}
-        </div>
+        <p className="card-notes">{p.notes.join(', ')}</p>
         <p className="card-char">{p.character}</p>
         <div className="card-price">
           <strong>{rp(p.price)}</strong>
           {p.compareAt && <s>{rp(p.compareAt)}</s>}
         </div>
-        <a className="btn btn-dark btn-block" href={waLink(p)} target="_blank" rel="noreferrer">
+        <a className="btn btn-ghost btn-block" href={waLink(p)} target="_blank" rel="noreferrer">
           Pesan via WhatsApp
         </a>
       </div>
@@ -266,13 +262,13 @@ export default function App() {
   return (
     <div className="page">
       <header className="nav">
-        <a className="logo" href="#top">PARFUMEFY</a>
+        <a className="logo" href="#top">Parfumefy</a>
         <nav className="nav-links">
           <a href="#koleksi">Koleksi</a>
           <a href="#kenapa">Kenapa Kami</a>
           <a href="#malam">Wangi Malam</a>
         </nav>
-        <a className="btn btn-dark btn-sm" href={waUmum} target="_blank" rel="noreferrer">
+        <a className="btn btn-ghost btn-sm" href={waUmum} target="_blank" rel="noreferrer">
           Pesan Sekarang
         </a>
       </header>
@@ -281,23 +277,20 @@ export default function App() {
       <section className="hero" id="top">
         <canvas className="hero-glow" aria-hidden="true" />
         <div className="hero-text">
-          <span className="eyebrow rv">100% Original · Siap kirim se-Indonesia</span>
+          <span className="kicker rv">100% original, kirim se-Indonesia</span>
           <h1 className="rv">
-            WANGI YANG <span className="hl">NEMPEL.</span>
+            Wangi yang nempel.<br />
+            <em>harga yang masuk akal.</em>
           </h1>
           <p className="hero-sub rv">
-            {data.shop.tagline}. Kurasi HMNS, Mykonos, Afnan, dan Zimaya —
+            {data.shop.tagline}. Kurasi HMNS, Mykonos, Afnan, dan Zimaya,
             dari yang segar buat harian sampai yang gelap buat malam hari.
           </p>
           <div className="hero-cta rv">
-            <a className="btn btn-dark btn-lg" href="#koleksi">Lihat Koleksi</a>
-            <a className="btn btn-line btn-lg" href="#malam">Wangi Malam</a>
+            <a className="btn btn-amber btn-lg" href="#koleksi">Lihat Koleksi</a>
+            <a className="btn btn-ghost btn-lg" href="#malam">Wangi Malam</a>
           </div>
-          <div className="hero-stats rv">
-            <div><strong>{data.products.length}+</strong><span>Parfum kurasi</span></div>
-            <div><strong>100%</strong><span>Original</span></div>
-            <div><strong>24 jam</strong><span>Proses kirim</span></div>
-          </div>
+          <p className="hero-note rv">{data.products.length} parfum kurasi, garansi uang kembali kalau terbukti palsu.</p>
         </div>
         <div className="hero-visual rv">
           <div className="hero-px" data-px="-0.18" data-px-clamp="100">
@@ -319,18 +312,19 @@ export default function App() {
       <div className="marquee" aria-hidden="true">
         <div className="marquee-track">
           {Array.from({ length: 2 }).map((_, i) => (
-            <span key={i}>
-              HMNS ✦ MYKONOS ✦ AFNAN ✦ ZIMAYA ✦ 100% ORIGINAL ✦ HARGA JUJUR ✦&nbsp;
-            </span>
+            <div className="mq-set" key={i}>
+              <span>HMNS</span><span>Mykonos</span><span>Afnan</span><span>Zimaya</span>
+              <span>100% original</span><span>Harga jujur</span>
+            </div>
           ))}
         </div>
       </div>
 
       {/* KOLEKSI */}
       <section className="section" id="koleksi">
-        <div className="sec-head rv">
+        <div className="sec-head">
           <div>
-            <span className="eyebrow">Koleksi</span>
+            <span className="kicker">Koleksi</span>
             <h2>Pilih wangimu.</h2>
           </div>
           <p className="sec-sub">
@@ -338,7 +332,7 @@ export default function App() {
             pesananmu langsung nyambung ke admin.
           </p>
         </div>
-        <div className="filters rv">
+        <div className="filters">
           {FILTERS.map((f) => (
             <button
               key={f}
@@ -359,29 +353,29 @@ export default function App() {
 
       {/* BENTO — kenapa Parfumefy */}
       <section className="section bento" id="kenapa">
-        <div className="bento-text rv">
-          <span className="eyebrow">Kenapa Parfumefy</span>
+        <div className="bento-text">
+          <span className="kicker">Kenapa Parfumefy</span>
           <h2>Bukan sekadar jualan botol.</h2>
           <p className="sec-sub">
             Kami kurasi satu-satu, bukan asal stok. Setiap parfum di halaman ini
             sudah kami cium, kami pakai, dan kami berani rekomendasikan.
           </p>
           <ul className="checks">
-            <li><strong>01 — Original, bukan refill.</strong><br />Segel utuh, batch jelas, garansi uang kembali kalau terbukti palsu.</li>
-            <li><strong>02 — Harga jujur.</strong><br />Harga coret itu harga pasaran, bukan harga karangan. Yang kamu lihat, itu yang kamu bayar.</li>
-            <li><strong>03 — Konsultasi gratis.</strong><br />Bingung pilih? Ceritakan gayamu, kami rekomendasikan aromanya lewat WhatsApp.</li>
+            <li><strong>Original, bukan refill.</strong><br />Segel utuh, batch jelas, garansi uang kembali kalau terbukti palsu.</li>
+            <li><strong>Harga jujur.</strong><br />Harga coret itu harga pasaran, bukan harga karangan. Yang kamu lihat, itu yang kamu bayar.</li>
+            <li><strong>Konsultasi gratis.</strong><br />Bingung pilih? Ceritakan gayamu, kami rekomendasikan aromanya lewat WhatsApp.</li>
           </ul>
         </div>
-        <div className="bento-tiles rv">
+        <div className="bento-tiles">
           <div className="tile-px">
             <img data-px="-0.2" data-px-clamp="30" className="tile" src="/images/hero-amber.jpg" alt="Suasana amber hangat" />
           </div>
           <img className="tile tile-blob" src="/images/mykonos-dark-secret.jpg" alt="Mykonos Dark Secret" />
-          <a className="tile tile-pink" href={waLink(night[0])} target="_blank" rel="noreferrer">
-            <span>Produk Unggulan</span>
+          <a className="tile tile-dark" href={waLink(night[0])} target="_blank" rel="noreferrer">
+            <span>Produk unggulan</span>
             <strong>{night[0].brand} {night[0].name}</strong>
             <em>{rp(night[0].price)}</em>
-            <span className="tile-cta">Pesan →</span>
+            <span className="tile-cta">Pesan</span>
           </a>
         </div>
       </section>
@@ -390,26 +384,26 @@ export default function App() {
       <section className="night" id="malam">
         <div className="night-glow" data-px="-0.12" data-px-clamp="80" data-px-center aria-hidden="true" />
         <div className="night-inner">
-          <span className="eyebrow light rv">Wangi Malam</span>
+          <span className="kicker light">Wangi malam</span>
           <div className="night-word-px" data-px="-0.3" data-px-clamp="120">
-            <h2 className="night-word rv">MALAM</h2>
+            <h2 className="night-word">MALAM</h2>
           </div>
-          <p className="night-sub rv">
+          <p className="night-sub">
             Buat yang keluar setelah gelap. Gelap, manis, dan nempel sampai pagi.
           </p>
           <div className="night-grid">
             {night.map((p) => (
-              <article key={p.id} className="night-card rv">
+              <article key={p.id} className="night-card">
                 <img src={p.image} alt={`${p.brand} ${p.name}`} loading="lazy" />
                 <div className="night-card-body">
-                  <div className="card-brand light">{p.brand} · {p.size}</div>
+                  <div className="card-brand light">{p.brand}, {p.size}</div>
                   <h3>{p.name}</h3>
                   <p>{p.character}</p>
                   <div className="card-price light">
                     <strong>{rp(p.price)}</strong>
                     {p.compareAt && <s>{rp(p.compareAt)}</s>}
                   </div>
-                  <a className="btn btn-light btn-block" href={waLink(p)} target="_blank" rel="noreferrer">
+                  <a className="btn btn-ghost btn-block" href={waLink(p)} target="_blank" rel="noreferrer">
                     Pesan
                   </a>
                 </div>
@@ -421,22 +415,22 @@ export default function App() {
 
       {/* Jaminan */}
       <section className="assure">
-        <div className="rv"><strong>Segel utuh</strong><span>Botol datang tersegel, lengkap dengan box-nya.</span></div>
-        <div className="rv"><strong>Packing aman</strong><span>Bubble wrap berlapis, dus tebal, anti pecah di jalan.</span></div>
-        <div className="rv"><strong>Retur mudah</strong><span>Barang cacat atau salah kirim? Kami ganti, tanpa ribet.</span></div>
+        <div><strong>Segel utuh</strong><span>Botol datang tersegel, lengkap dengan box-nya.</span></div>
+        <div><strong>Packing aman</strong><span>Bubble wrap berlapis, dus tebal, anti pecah di jalan.</span></div>
+        <div><strong>Retur mudah</strong><span>Barang cacat atau salah kirim? Kami ganti, tanpa ribet.</span></div>
       </section>
 
       {/* CTA akhir */}
-      <section className="final rv">
+      <section className="final">
         <h2>Bingung pilih aroma?</h2>
         <p>Ceritakan gayamu — kerja, kuliah, atau malam minggu. Kami yang pilihkan.</p>
-        <a className="btn btn-dark btn-lg" href={waUmum} target="_blank" rel="noreferrer">
+        <a className="btn btn-amber btn-lg" href={waUmum} target="_blank" rel="noreferrer">
           Konsultasi Gratis via WhatsApp
         </a>
       </section>
 
       <footer className="foot">
-        <div className="logo">PARFUMEFY</div>
+        <div className="logo">Parfumefy</div>
         <p>{data.shop.tagline}. Foto produk dari situs resmi brand. Harga dapat berubah sewaktu-waktu mengikuti stok.</p>
         <span>© 2026 Parfumefy</span>
       </footer>

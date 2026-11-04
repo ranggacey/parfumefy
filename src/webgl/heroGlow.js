@@ -1,7 +1,8 @@
 /*
  * Hero glow — WebGL2 modern, tanpa library (tanpa Three.js).
- * Satu kanvas di belakang hero: shader aurora peach/pink/violet yang
- * mengalir pelan + partikel percikan wangi di atasnya. Sengaja ringan:
+ * Satu kanvas di belakang hero: shader aurora amber/rose di atas dasar
+ * tinta hangat yang mengalir pelan + partikel percikan wangi di atasnya.
+ * Sengaja ringan:
  * dua program kecil, satu segitiga fullscreen + 240 titik, DPR dijepit,
  * RAF dijeda saat hero tidak terlihat atau tab hidden, dan pointer hanya
  * menggeser blob sedikit. Kalau WebGL2 tidak tersedia atau shader gagal
@@ -32,20 +33,20 @@ void main() {
   p.x *= u_res.x / u_res.y;
   float t = u_time * 0.06;
   vec2 drift = u_pointer * 0.06;
-  vec3 cream = vec3(1.0, 0.973, 0.925);
+  vec3 base = vec3(0.078, 0.063, 0.047);
   vec3 tint = vec3(0.0);
   float a = 0.0;
   vec2 c1 = vec2(0.25 * sin(t * 0.9) + drift.x, 0.18 * cos(t * 0.7) + drift.y);
   float b1 = blob(p, c1, 0.55);
-  tint += vec3(0.965, 0.776, 0.722) * b1; a += b1 * 0.55;
+  tint += vec3(0.824, 0.635, 0.298) * b1; a += b1 * 0.55;
   vec2 c2 = vec2(-0.30 * cos(t * 0.6 + 1.7) + drift.x, -0.15 * sin(t * 0.8 + 0.5) + drift.y);
   float b2 = blob(p, c2, 0.50);
-  tint += vec3(0.949, 0.655, 0.765) * b2; a += b2 * 0.50;
+  tint += vec3(0.718, 0.431, 0.353) * b2; a += b2 * 0.50;
   vec2 c3 = vec2(0.20 * sin(t * 0.5 + 3.0) + drift.x, 0.25 * cos(t * 0.6 + 2.0) + drift.y);
   float b3 = blob(p, c3, 0.45);
-  tint += vec3(0.416, 0.361, 1.0) * b3; a += b3 * 0.30;
+  tint += vec3(0.95, 0.85, 0.60) * b3; a += b3 * 0.30;
   a = clamp(a, 0.0, 0.85);
-  vec3 col = mix(cream, clamp(tint, 0.0, 1.0), a);
+  vec3 col = mix(base, clamp(tint, 0.0, 1.0), a);
   fragColor = vec4(col, 1.0);
 }
 `;
@@ -74,7 +75,7 @@ out vec4 fragColor;
 void main() {
   float dist = length(gl_PointCoord - 0.5);
   float alpha = (1.0 - smoothstep(0.0, 0.5, dist)) * (0.20 + 0.45 * v_tw);
-  fragColor = vec4(1.0, 0.85, 0.75, alpha);
+  fragColor = vec4(1.0, 0.82, 0.55, alpha);
 }
 `;
 
@@ -178,7 +179,7 @@ export function initHeroGlow(canvas) {
     raf = requestAnimationFrame(frame);
     const t = (now - start) / 1000;
     resize();
-    gl.clearColor(1, 0.973, 0.925, 1);
+    gl.clearColor(0.078, 0.063, 0.047, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.useProgram(bgProg);
     gl.uniform2f(bgLoc.res, canvas.width, canvas.height);
