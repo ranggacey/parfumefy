@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import data from './data/products.json';
 
 /*
@@ -126,9 +126,42 @@ function useMouseParallax() {
   }, []);
 }
 
+/*
+ * Morph saat scroll di hero (ala Morph PPT: satu objek berubah bentuk
+ * mulus antar keadaan, bukan pindah kasar): --morph 0 saat hero masih
+ * penuh di layar, 1 saat hero sudah keluar. CSS memakai variabel ini
+ * untuk mengubah radius arch jadi membulat, memiringkan arch sedikit,
+ * mengecilkan botol, dan memudarkan teks — semua properti mandiri
+ * (border-radius/rotate/scale/opacity) supaya tidak menimpa transform
+ * parallax yang sudah ada.
+ */
+function useScrollMorph() {
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = hero.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
+      hero.style.setProperty('--morph', p.toFixed(3));
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick);
+    return () => {
+      window.removeEventListener('scroll', kick);
+      window.removeEventListener('resize', kick);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+}
+
 function ProductCard({ p }) {
   return (
-    <article className="card rv">
+    <article className="card rv" data-card={p.id}>
       <div className="card-img">
         <img src={p.image} alt={`${p.brand} ${p.name}`} loading="lazy" />
         {p.badge && <span className="card-badge">{p.badge}</span>}
@@ -163,6 +196,52 @@ export default function App() {
   useReveal([filter]);
   useScrollParallax();
   useMouseParallax();
+  useScrollMorph();
+
+  // Morph antar filter (ala Morph PPT: objek yang sama meluncur ke
+  // posisi barunya, bukan hilang lalu muncul). Sebelum filter berubah,
+  // rekam posisi tiap kartu; sesudah render, animasikan selisihnya.
+  const gridRef = useRef(null);
+  const prevRects = useRef(new Map());
+  const setFilterMorph = (next) => {
+    const grid = gridRef.current;
+    if (grid) {
+      const m = new Map();
+      grid.querySelectorAll('[data-card]').forEach((el) => {
+        m.set(el.dataset.card, el.getBoundingClientRect());
+      });
+      prevRects.current = m;
+    }
+    setFilter(next);
+  };
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const grid = gridRef.current;
+    const prev = prevRects.current;
+    if (!grid || !prev.size) return;
+    const vh = window.innerHeight;
+    grid.querySelectorAll('[data-card]').forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh) return; // di luar layar: jangan dikedipkan
+      const old = prev.get(el.dataset.card);
+      if (!old) {
+        el.animate(
+          [{ opacity: 0, transform: 'scale(.92) translateY(14px)' }, { opacity: 1, transform: 'scale(1) translateY(0)' }],
+          { duration: 350, easing: 'cubic-bezier(.22,.8,.3,1)' }
+        );
+        return;
+      }
+      const dx = old.left - r.left;
+      const dy = old.top - r.top;
+      if (dx || dy) {
+        el.animate(
+          [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'translate(0, 0)' }],
+          { duration: 420, easing: 'cubic-bezier(.22,.8,.3,1)' }
+        );
+      }
+    });
+    prevRects.current = new Map();
+  }, [filter]);
 
   return (
     <div className="page">
@@ -243,13 +322,13 @@ export default function App() {
             <button
               key={f}
               className={filter === f ? 'chip on' : 'chip'}
-              onClick={() => setFilter(f)}
+              onClick={() => setFilterMorph(f)}
             >
               {f}
             </button>
           ))}
         </div>
-        <div className="grid">
+        <div className="grid" ref={gridRef}>
           {shown.map((p) => (
             <ProductCard key={p.id} p={p} />
           ))}

@@ -100,11 +100,22 @@ h1, h2, h3, .logo { font-family: 'Archivo', 'Inter', sans-serif; }
 .hero-visual { position: relative; }
 /* Lapisan parallax: hanya transform, di-composite GPU */
 .hero-px, .hero-mouse, .hero-arch, .hero-pill, .hero-badge, .night-word-px, .night-glow { will-change: transform; }
+/* Morph scroll hero: --morph 0 → 1 dari JS (useScrollMorph). Properti
+   mandiri (radius/rotate/scale/opacity) supaya tidak menimpa transform
+   parallax; tanpa JS nilainya 0 = bentuk awal normal. */
+.hero { --morph: 0; }
 .hero-arch {
   position: relative; background: var(--peach);
-  border-radius: 999px 999px 28px 28px; overflow: visible;
+  border-top-left-radius: calc(999px - var(--morph) * 700px);
+  border-top-right-radius: calc(999px - var(--morph) * 700px);
+  border-bottom-left-radius: calc(28px + var(--morph) * 100px);
+  border-bottom-right-radius: calc(28px + var(--morph) * 100px);
+  rotate: calc(var(--morph) * 4deg);
+  overflow: visible;
   padding: clamp(16px, 3vw, 32px) clamp(16px, 3vw, 32px) 0;
 }
+.hero-arch img { scale: calc(1 - var(--morph) * 0.12); }
+.hero-text { opacity: calc(1 - var(--morph) * 0.25); }
 .hero-arch img {
   width: 100%; border-radius: 16px; filter: drop-shadow(0 24px 32px rgba(0, 0, 0, 0.25));
   animation: floaty 6s ease-in-out infinite;
@@ -185,6 +196,17 @@ h1, h2, h3, .logo { font-family: 'Archivo', 'Inter', sans-serif; }
 .tile-px { grid-row: span 2; overflow: hidden; border-radius: 28px; min-height: 420px; }
 .tile-px img { width: 100%; height: 115%; object-fit: cover; will-change: transform; }
 .tile-blob { height: 200px; border-radius: 58% 42% 55% 45% / 45% 55% 42% 58%; }
+/* Morph organik idle (ala Morph PPT tapi terus-menerus): bentuk blob
+   berubah pelan tanpa henti. Hanya radius, jadi tidak menabrak parallax. */
+@keyframes blobmorph {
+  0% { border-radius: 58% 42% 55% 45% / 45% 55% 42% 58%; }
+  50% { border-radius: 45% 55% 48% 52% / 52% 45% 55% 48%; }
+  100% { border-radius: 52% 48% 60% 40% / 48% 52% 45% 55%; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tile-blob { animation: blobmorph 11s ease-in-out infinite alternate; }
+  .night-glow { animation: blobmorph 14s ease-in-out infinite alternate; }
+}
 .tile-pink {
   background: var(--pink); border-radius: 28px; padding: 22px; text-decoration: none;
   display: flex; flex-direction: column; gap: 6px; justify-content: center; min-height: 200px; color: var(--ink);
