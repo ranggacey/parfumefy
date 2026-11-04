@@ -71,11 +71,21 @@ h1, h2, h3, .logo { font-family: 'Archivo', 'Inter', sans-serif; }
 
 /* Hero */
 .hero {
+  position: relative;
   max-width: 1180px; margin: 0 auto;
   padding: clamp(28px, 5vw, 72px) clamp(16px, 4vw, 48px) clamp(36px, 5vw, 64px);
   display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(24px, 4vw, 64px);
   align-items: center;
 }
+/* Kanvas WebGL2 hero: di belakang konten (z 0), konten di atasnya
+   (z 1, stacking context sendiri supaya highlight ::after di h1 tidak
+   tertutup kanvas). Tersembunyi sampai JS mengaktifkan (.on). */
+.hero-glow {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none; display: none;
+}
+.hero-glow.on { display: block; }
+.hero-text, .hero-visual { position: relative; z-index: 1; }
 .eyebrow {
   display: inline-block; font-family: 'Archivo', sans-serif; font-size: 11px;
   font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;

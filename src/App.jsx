@@ -198,6 +198,26 @@ export default function App() {
   useMouseParallax();
   useScrollMorph();
 
+  // WebGL2 hero glow: dimuat malas (chunk terpisah) setelah halaman
+  // tampil, nonaktif kalau prefers-reduced-motion. Kalau WebGL2 tidak
+  // tersedia, init mengembalikan null dan kanvas tetap tersembunyi.
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const canvas = document.querySelector('.hero-glow');
+    if (!canvas) return;
+    let cleanup = null;
+    let dead = false;
+    import('./webgl/heroGlow.js').then((m) => {
+      if (dead) return;
+      cleanup = m.initHeroGlow(canvas);
+      if (cleanup) canvas.classList.add('on');
+    }).catch(() => {});
+    return () => {
+      dead = true;
+      if (cleanup) cleanup();
+    };
+  }, []);
+
   // Morph antar filter (ala Morph PPT: objek yang sama meluncur ke
   // posisi barunya, bukan hilang lalu muncul). Sebelum filter berubah,
   // rekam posisi tiap kartu; sesudah render, animasikan selisihnya.
@@ -259,6 +279,7 @@ export default function App() {
 
       {/* HERO — satu jangkar: satu botol besar di atas blok warna datar */}
       <section className="hero" id="top">
+        <canvas className="hero-glow" aria-hidden="true" />
         <div className="hero-text">
           <span className="eyebrow rv">100% Original · Siap kirim se-Indonesia</span>
           <h1 className="rv">
