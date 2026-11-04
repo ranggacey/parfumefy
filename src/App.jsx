@@ -200,15 +200,15 @@ export default function App() {
           </div>
         </div>
         <div className="hero-visual rv">
-          <div className="hero-px" data-px="-0.08" data-px-clamp="60">
+          <div className="hero-px" data-px="-0.18" data-px-clamp="100">
             <div className="hero-mouse">
-              <div className="hero-arch">
+              <div className="hero-arch" data-px="-0.06" data-px-clamp="40">
                 <img src={hero.image} alt={`${hero.brand} ${hero.name}`} />
-                <div className="hero-pill">
+                <div className="hero-pill" data-px="-0.25" data-px-center data-px-clamp="40">
                   <span>{hero.brand} {hero.name}</span>
                   <strong>{rp(hero.price)}</strong>
                 </div>
-                <span className="hero-badge">Best Seller</span>
+                <span className="hero-badge" data-px="-0.3" data-px-clamp="50">Best Seller</span>
               </div>
             </div>
           </div>
@@ -274,7 +274,7 @@ export default function App() {
         </div>
         <div className="bento-tiles rv">
           <div className="tile-px">
-            <img data-px="-0.12" data-px-clamp="30" className="tile" src="/images/hero-amber.jpg" alt="Suasana amber hangat" />
+            <img data-px="-0.2" data-px-clamp="30" className="tile" src="/images/hero-amber.jpg" alt="Suasana amber hangat" />
           </div>
           <img className="tile tile-blob" src="/images/mykonos-dark-secret.jpg" alt="Mykonos Dark Secret" />
           <a className="tile tile-pink" href={waLink(night[0])} target="_blank" rel="noreferrer">
@@ -288,10 +288,10 @@ export default function App() {
 
       {/* MALAM — section gelap + glow ring */}
       <section className="night" id="malam">
-        <div className="night-glow" data-px="-0.05" data-px-clamp="60" data-px-center aria-hidden="true" />
+        <div className="night-glow" data-px="-0.12" data-px-clamp="80" data-px-center aria-hidden="true" />
         <div className="night-inner">
           <span className="eyebrow light rv">Wangi Malam</span>
-          <div className="night-word-px" data-px="-0.15" data-px-clamp="70">
+          <div className="night-word-px" data-px="-0.3" data-px-clamp="120">
             <h2 className="night-word rv">MALAM</h2>
           </div>
           <p className="night-sub rv">

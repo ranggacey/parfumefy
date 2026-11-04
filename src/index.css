@@ -99,7 +99,7 @@ h1, h2, h3, .logo { font-family: 'Archivo', 'Inter', sans-serif; }
 
 .hero-visual { position: relative; }
 /* Lapisan parallax: hanya transform, di-composite GPU */
-.hero-px, .hero-mouse, .night-word-px, .night-glow { will-change: transform; }
+.hero-px, .hero-mouse, .hero-arch, .hero-pill, .hero-badge, .night-word-px, .night-glow { will-change: transform; }
 .hero-arch {
   position: relative; background: var(--peach);
   border-radius: 999px 999px 28px 28px; overflow: visible;
