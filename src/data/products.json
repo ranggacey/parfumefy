@@ -1,0 +1,107 @@
+{
+  "shop": {
+    "name": "Parfumefy",
+    "tagline": "Wangi yang nempel, harga yang masuk akal",
+    "whatsapp": "6280000000000"
+  },
+  "products": [
+    {
+      "id": "hmns-alpha",
+      "brand": "HMNS",
+      "name": "Alpha",
+      "size": "100 ml",
+      "concentration": "Eau de Parfum",
+      "price": 289000,
+      "compareAt": 349000,
+      "notes": ["Citrus segar", "Green tea", "Cedarwood"],
+      "character": "Segar, bersih, gampang disukai",
+      "vibe": "Harian",
+      "image": "/images/hmns-alpha.jpg",
+      "badge": "Best Seller"
+    },
+    {
+      "id": "hmns-farhampton",
+      "brand": "HMNS",
+      "name": "Farhampton",
+      "size": "100 ml",
+      "concentration": "Extrait de Parfum",
+      "price": 369000,
+      "compareAt": null,
+      "notes": ["Bergamot", "Lavender", "Amber & Tonka Bean"],
+      "character": "Hangat, aromatik, soulmate buat jalan jauh",
+      "vibe": "Harian",
+      "image": "/images/hmns-farhampton.jpg",
+      "badge": "Best Seller"
+    },
+    {
+      "id": "mykonos-dark-secret",
+      "brand": "Mykonos",
+      "name": "Dark Secret",
+      "size": "100 ml",
+      "concentration": "Extrait de Parfum",
+      "price": 499000,
+      "compareAt": 599000,
+      "notes": ["Black cherry", "Saffron", "Oud"],
+      "character": "Gelap, misterius, mewah buat malam hari",
+      "vibe": "Malam",
+      "image": "/images/mykonos-dark-secret.jpg",
+      "badge": "Paling Diburu"
+    },
+    {
+      "id": "mykonos-zora",
+      "brand": "Mykonos",
+      "name": "Zora",
+      "size": "100 ml",
+      "concentration": "Eau de Parfum",
+      "price": 429000,
+      "compareAt": null,
+      "notes": ["Bunga putih", "Musk lembut", "Sentuhan manis"],
+      "character": "Floral yang terang, elegan, feminin",
+      "vibe": "Harian",
+      "image": "/images/mykonos-zora.jpg",
+      "badge": null
+    },
+    {
+      "id": "afnan-9pm",
+      "brand": "Afnan",
+      "name": "9 PM",
+      "size": "100 ml",
+      "concentration": "Eau de Parfum",
+      "price": 459000,
+      "compareAt": 549000,
+      "notes": ["Apel", "Vanilla", "Cinnamon"],
+      "character": "Manis, bold, siap nemenin sampai pagi",
+      "vibe": "Malam",
+      "image": "/images/afnan-9pm.jpg",
+      "badge": "Best Seller"
+    },
+    {
+      "id": "zimaya-al-fouz",
+      "brand": "Zimaya",
+      "name": "Al Fouz",
+      "size": "100 ml",
+      "concentration": "Eau de Parfum",
+      "price": 389000,
+      "compareAt": null,
+      "notes": ["Saffron", "Amber", "Kayu hangat"],
+      "character": "Kaya, hangat, aura Timur Tengah",
+      "vibe": "Malam",
+      "image": "/images/zimaya-al-fouz.jpg",
+      "badge": "Baru"
+    },
+    {
+      "id": "zimaya-sharaf-blend",
+      "brand": "Zimaya",
+      "name": "Sharaf Blend",
+      "size": "100 ml",
+      "concentration": "Eau de Parfum",
+      "price": 549000,
+      "compareAt": null,
+      "notes": ["Oud", "Amber", "Vanilla gelap"],
+      "character": "Bold dan mewah, sekali semprot langsung statement",
+      "vibe": "Malam",
+      "image": "/images/zimaya-sharaf-blend.jpg",
+      "badge": null
+    }
+  ]
+}
