@@ -44,6 +44,88 @@ function useReveal(deps = []) {
   }, deps);
 }
 
+/*
+ * Parallax, dua lapis (nonaktifkan total kalau prefers-reduced-motion):
+ * 1) Scroll: elemen [data-px] bergeser pelan berlawanan arah scroll
+ *    (speed negatif = lapisan terasa lebih jauh). Nilai dijepit supaya tidak
+ *    keluar dari wadahnya. Dijalankan via rAF, hanya properti transform.
+ * 2) Mouse (desktop pointer halus saja): hero bergeser halus mengikuti
+ *    kursor dengan lerp, visual dan teks bergerak berlawanan arah tipis.
+ * Lapisan dipisah (scroll di .hero-px, mouse di .hero-mouse, melayang di
+ * img) supaya transform-nya tidak saling menimpa.
+ */
+function useScrollParallax() {
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const els = Array.from(document.querySelectorAll('[data-px]'));
+    if (!els.length) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight;
+      els.forEach((el) => {
+        const speed = parseFloat(el.dataset.px || '0');
+        const clamp = parseFloat(el.dataset.pxClamp || '80');
+        const r = el.getBoundingClientRect();
+        const center = r.top + r.height / 2 - vh / 2;
+        const y = Math.max(-clamp, Math.min(clamp, center * speed));
+        el.style.transform = el.hasAttribute('data-px-center')
+          ? `translate(-50%, ${y.toFixed(1)}px)`
+          : `translate3d(0, ${y.toFixed(1)}px, 0)`;
+      });
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick);
+    return () => {
+      window.removeEventListener('scroll', kick);
+      window.removeEventListener('resize', kick);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+}
+
+function useMouseParallax() {
+  useEffect(() => {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const visual = hero.querySelector('.hero-mouse');
+    const copy = hero.querySelector('.hero-text');
+    let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+    const loop = () => {
+      raf = 0;
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      if (visual) visual.style.transform = `translate3d(${(cx * -16).toFixed(2)}px, ${(cy * -12).toFixed(2)}px, 0)`;
+      if (copy) copy.style.transform = `translate3d(${(cx * 8).toFixed(2)}px, ${(cy * 6).toFixed(2)}px, 0)`;
+      if (Math.abs(tx - cx) > 0.001 || Math.abs(ty - cy) > 0.001) {
+        raf = requestAnimationFrame(loop);
+      } else if (tx === 0 && ty === 0) {
+        if (visual) visual.style.transform = '';
+        if (copy) copy.style.transform = '';
+      }
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+    const onMove = (e) => {
+      const r = hero.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width - 0.5;
+      ty = (e.clientY - r.top) / r.height - 0.5;
+      kick();
+    };
+    const onLeave = () => { tx = 0; ty = 0; kick(); };
+    hero.addEventListener('pointermove', onMove);
+    hero.addEventListener('pointerleave', onLeave);
+    return () => {
+      hero.removeEventListener('pointermove', onMove);
+      hero.removeEventListener('pointerleave', onLeave);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+}
+
 function ProductCard({ p }) {
   return (
     <article className="card rv">
@@ -79,6 +161,8 @@ export default function App() {
     [filter]
   );
   useReveal([filter]);
+  useScrollParallax();
+  useMouseParallax();
 
   return (
     <div className="page">
@@ -116,13 +200,17 @@ export default function App() {
           </div>
         </div>
         <div className="hero-visual rv">
-          <div className="hero-arch">
-            <img src={hero.image} alt={`${hero.brand} ${hero.name}`} />
-            <div className="hero-pill">
-              <span>{hero.brand} {hero.name}</span>
-              <strong>{rp(hero.price)}</strong>
+          <div className="hero-px" data-px="-0.08" data-px-clamp="60">
+            <div className="hero-mouse">
+              <div className="hero-arch">
+                <img src={hero.image} alt={`${hero.brand} ${hero.name}`} />
+                <div className="hero-pill">
+                  <span>{hero.brand} {hero.name}</span>
+                  <strong>{rp(hero.price)}</strong>
+                </div>
+                <span className="hero-badge">Best Seller</span>
+              </div>
             </div>
-            <span className="hero-badge">Best Seller</span>
           </div>
         </div>
       </section>
@@ -185,7 +273,9 @@ export default function App() {
           </ul>
         </div>
         <div className="bento-tiles rv">
-          <img className="tile tile-big" src="/images/hero-amber.jpg" alt="Suasana amber hangat" />
+          <div className="tile-px">
+            <img data-px="-0.12" data-px-clamp="30" className="tile" src="/images/hero-amber.jpg" alt="Suasana amber hangat" />
+          </div>
           <img className="tile tile-blob" src="/images/mykonos-dark-secret.jpg" alt="Mykonos Dark Secret" />
           <a className="tile tile-pink" href={waLink(night[0])} target="_blank" rel="noreferrer">
             <span>Produk Unggulan</span>
@@ -198,10 +288,12 @@ export default function App() {
 
       {/* MALAM — section gelap + glow ring */}
       <section className="night" id="malam">
-        <div className="night-glow" aria-hidden="true" />
+        <div className="night-glow" data-px="-0.05" data-px-clamp="60" data-px-center aria-hidden="true" />
         <div className="night-inner">
           <span className="eyebrow light rv">Wangi Malam</span>
-          <h2 className="night-word rv">MALAM</h2>
+          <div className="night-word-px" data-px="-0.15" data-px-clamp="70">
+            <h2 className="night-word rv">MALAM</h2>
+          </div>
           <p className="night-sub rv">
             Buat yang keluar setelah gelap. Gelap, manis, dan nempel sampai pagi.
           </p>

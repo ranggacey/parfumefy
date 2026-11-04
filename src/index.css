@@ -98,6 +98,8 @@ h1, h2, h3, .logo { font-family: 'Archivo', 'Inter', sans-serif; }
 .hero-stats span { font-size: 12px; color: var(--grey); }
 
 .hero-visual { position: relative; }
+/* Lapisan parallax: hanya transform, di-composite GPU */
+.hero-px, .hero-mouse, .night-word-px, .night-glow { will-change: transform; }
 .hero-arch {
   position: relative; background: var(--peach);
   border-radius: 999px 999px 28px 28px; overflow: visible;
@@ -179,7 +181,9 @@ h1, h2, h3, .logo { font-family: 'Archivo', 'Inter', sans-serif; }
 .checks strong { color: var(--ink); font-size: 15px; }
 .bento-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .tile { width: 100%; object-fit: cover; }
-.tile-big { grid-row: span 2; height: 100%; min-height: 420px; border-radius: 28px; }
+/* Bingkai parallax: gambar 115% tinggi, bergeser di dalam bingkai */
+.tile-px { grid-row: span 2; overflow: hidden; border-radius: 28px; min-height: 420px; }
+.tile-px img { width: 100%; height: 115%; object-fit: cover; will-change: transform; }
 .tile-blob { height: 200px; border-radius: 58% 42% 55% 45% / 45% 55% 42% 58%; }
 .tile-pink {
   background: var(--pink); border-radius: 28px; padding: 22px; text-decoration: none;
@@ -236,7 +240,7 @@ h1, h2, h3, .logo { font-family: 'Archivo', 'Inter', sans-serif; }
   .hero-visual { max-width: 520px; margin: 0 auto; width: 100%; }
   .bento { grid-template-columns: 1fr; }
   .night-grid { grid-template-columns: 1fr 1fr; }
-  .tile-big { min-height: 320px; }
+  .tile-px { min-height: 320px; }
 }
 @media (max-width: 640px) {
   .nav-links { display: none; }
@@ -250,6 +254,6 @@ h1, h2, h3, .logo { font-family: 'Archivo', 'Inter', sans-serif; }
   .card-price strong { font-size: 16px; }
   .night-grid { grid-template-columns: 1fr; }
   .assure { grid-template-columns: 1fr; }
-  .tile-big { min-height: 260px; }
+  .tile-px { min-height: 260px; }
   .tile-blob, .tile-pink { min-height: 160px; height: 160px; }
 }
